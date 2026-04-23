@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>比特币挖矿计算器</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="site-header">
+  <h1>比特币挖矿计算器</h1>
+  <p class="subtitle">选择矿机、微调参数、输入电费，实时估算电费成本、产出与利润。</p>
+</header>
+
+<main class="layout">
+  <section class="panel" id="panel-machine">
+    <h2>1. 选择矿机</h2>
+    <div class="field">
+      <label for="brand-select">品牌</label>
+      <select id="brand-select"></select>
+    </div>
+    <div class="field">
+      <label for="model-select">型号</label>
+      <select id="model-select"></select>
+    </div>
+
+    <h3>矿机参数（可微调）</h3>
+    <div class="grid-2">
+      <div class="field">
+        <label for="hashrate">算力 (TH/s)</label>
+        <input type="number" id="hashrate" step="0.1" min="0" />
+      </div>
+      <div class="field">
+        <label for="power">功耗 (W)</label>
+        <input type="number" id="power" step="1" min="0" />
+      </div>
+      <div class="field">
+        <label for="efficiency">能效 (J/TH)</label>
+        <input type="number" id="efficiency" step="0.01" min="0" readonly />
+      </div>
+      <div class="field">
+        <label for="units">矿机数量</label>
+        <input type="number" id="units" step="1" min="1" value="1" />
+      </div>
+    </div>
+    <button type="button" class="btn-ghost" id="reset-machine">还原默认参数</button>
+  </section>
+
+  <section class="panel" id="panel-economics">
+    <h2>2. 经济参数</h2>
+    <div class="grid-2">
+      <div class="field">
+        <label for="electricity-rate">电费 (元/kWh)</label>
+        <input type="number" id="electricity-rate" step="0.001" min="0" value="0.50" />
+      </div>
+      <div class="field">
+        <label for="currency">计价货币</label>
+        <select id="currency">
+          <option value="CNY">人民币 (CNY)</option>
+          <option value="USD">美元 (USD)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="btc-price">BTC 价格</label>
+        <input type="number" id="btc-price" step="1" min="0" value="480000" />
+      </div>
+      <div class="field">
+        <label for="network-hashrate">全网算力 (EH/s)</label>
+        <input type="number" id="network-hashrate" step="1" min="1" value="720" />
+      </div>
+      <div class="field">
+        <label for="block-reward">区块奖励 (BTC)</label>
+        <input type="number" id="block-reward" step="0.0001" min="0" value="3.125" />
+      </div>
+      <div class="field">
+        <label for="pool-fee">矿池费率 (%)</label>
+        <input type="number" id="pool-fee" step="0.1" min="0" max="100" value="1.5" />
+      </div>
+      <div class="field">
+        <label for="uptime">在线率 (%)</label>
+        <input type="number" id="uptime" step="0.1" min="0" max="100" value="98" />
+      </div>
+    </div>
+  </section>
+
+  <section class="panel results" id="panel-results">
+    <h2>3. 计算结果</h2>
+    <div class="summary-grid">
+      <div class="card">
+        <span class="card-label">日产出 BTC</span>
+        <span class="card-value" id="out-btc-day">-</span>
+      </div>
+      <div class="card">
+        <span class="card-label">日收入</span>
+        <span class="card-value" id="out-revenue-day">-</span>
+      </div>
+      <div class="card">
+        <span class="card-label">日电费</span>
+        <span class="card-value" id="out-cost-day">-</span>
+      </div>
+      <div class="card profit">
+        <span class="card-label">日利润</span>
+        <span class="card-value" id="out-profit-day">-</span>
+      </div>
+    </div>
+
+    <table class="breakdown">
+      <thead>
+        <tr>
+          <th>周期</th>
+          <th>耗电 (kWh)</th>
+          <th>电费</th>
+          <th>产出 (BTC)</th>
+          <th>收入</th>
+          <th>利润</th>
+          <th>利润率</th>
+        </tr>
+      </thead>
+      <tbody id="breakdown-body"></tbody>
+    </table>
+
+    <p class="note">
+      说明：日产出 BTC = (本机算力 / 全网算力) × 每日区块数(144) × 区块奖励 × 在线率 × (1 − 矿池费率)。
+      结果为基于当前难度的静态估算，未考虑难度调整、行情波动与矿机衰减。
+    </p>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <small>仅用于学习与估算，非投资建议。</small>
+</footer>
+
+<script src="miners.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
